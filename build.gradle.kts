@@ -31,6 +31,7 @@ repositories {
 
 // Dependencies are managed with Gradle version catalog - read more: https://docs.gradle.org/current/userguide/platforms.html#sub:version-catalog
 dependencies {
+    implementation("com.google.code.gson:gson:2.10.1")
     testImplementation(libs.junit)
     testImplementation(libs.opentest4j)
 
