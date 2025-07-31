@@ -12,18 +12,16 @@ import java.util.concurrent.CopyOnWriteArrayList
 
 @Service(Service.Level.PROJECT)
 class RecorderService(private val project: Project) {
-
+    
     private val logger = thisLogger()
     private val operationLog = CopyOnWriteArrayList<LogEntry>()
     private var isRecording = false
-
+    
     private val gson = GsonBuilder()
         .setPrettyPrinting()
         .create()
     
     fun isRecording(): Boolean = isRecording
-
-    fun getLogCount(): Int = operationLog.size
     
     fun startRecording() {
         logger.info("Starting recording for project: ${project.name}")
@@ -51,16 +49,7 @@ class RecorderService(private val project: Project) {
             logger.debug("Not recording, ignoring log entry: ${entry.type} - ${entry.path}")
         }
     }
-    
-    fun addCommandEntry(command: String, output: String) {
-        addLogEntry(LogEntry(
-            timestamp = System.currentTimeMillis(),
-            type = LogType.COMMAND,
-            command = command,
-            output = stripAnsiCodes(output)
-        ))
-    }
-    
+
     fun addFileCreateEntry(path: String) {
         addLogEntry(LogEntry(
             timestamp = System.currentTimeMillis(),
@@ -96,6 +85,15 @@ class RecorderService(private val project: Project) {
             data = content
         ))
     }
+
+    fun addCommandEntry(command: String, output: String) {
+        addLogEntry(LogEntry(
+            timestamp = System.currentTimeMillis(),
+            type = LogType.COMMAND,
+            command = command,
+            output = output
+        ))
+    }
     
     private fun saveOperationLog(): Boolean {
         return try {
@@ -103,10 +101,7 @@ class RecorderService(private val project: Project) {
             val logFile = File(projectBasePath, "operation.json")
             val jsonContent = gson.toJson(operationLog)
             logFile.writeText(jsonContent)
-
-            val entryCount = operationLog.size
-            logger.info("Operation log saved to: ${logFile.absolutePath} with $entryCount entries")
-
+            logger.info("Operation log saved to: ${logFile.absolutePath}")
             true
         } catch (e: Exception) {
             logger.error("Failed to save operation log", e)
@@ -114,11 +109,5 @@ class RecorderService(private val project: Project) {
         }
     }
 
-    // Notification functionality removed for simplicity
-    
-    private fun stripAnsiCodes(text: String): String {
-        // Regex to strip ANSI escape codes
-        val ansiRegex = "\\u001b\\[[0-9;]*[a-zA-Z]".toRegex()
-        return text.replace(ansiRegex, "")
-    }
+    fun getLogCount(): Int = operationLog.size
 }

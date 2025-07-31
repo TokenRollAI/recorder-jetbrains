@@ -86,8 +86,8 @@ class RecorderStatusBarWidget(project: Project) : EditorBasedWidget(project), St
 
             // Setup terminal command listener
             terminalCommandListener = TerminalCommandListener(project)
-            terminalCommandListener?.attachToTerminals()
-            
+            terminalCommandListener?.startMonitoring()
+
             logger.info("Recording started successfully")
             
         } catch (e: Exception) {
@@ -105,14 +105,14 @@ class RecorderStatusBarWidget(project: Project) : EditorBasedWidget(project), St
             }
             fileOperationListener = null
 
+            // Stop terminal command listener
+            terminalCommandListener?.stopMonitoring()
+            terminalCommandListener = null
+
             // Disconnect message bus
             messageBusConnection?.disconnect()
             messageBusConnection = null
-            
-            // Remove terminal command listener
-            terminalCommandListener?.detachFromTerminals()
-            terminalCommandListener = null
-            
+
             // Stop the recorder service and save log
             val saved = recorderService.stopRecording()
             
