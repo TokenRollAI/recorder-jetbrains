@@ -4,6 +4,18 @@
     <name>Development Activity Recorder</name>
     <vendor email="shuaiqijianhao@qq.com" url="https://github.com/TokenRollAI/recorder-jetbrains">TokenRollAI</vendor>
 
+    <description>A comprehensive development activity recorder for JetBrains IDEs that tracks and logs your coding activities.
+
+        Features:
+        • Records file editing activities and code changes
+        • Tracks terminal command execution
+        • Monitors Git operations and version control activities
+        • Provides a status bar widget to toggle recording on/off
+        • Exports activity data for analysis and productivity insights
+
+        Perfect for developers who want to analyze their coding patterns, track productivity, or maintain detailed logs of their development workflow.
+    </description>
+
     <depends>com.intellij.modules.platform</depends>
     <depends>Git4Idea</depends>
     <depends>org.jetbrains.plugins.terminal</depends>
